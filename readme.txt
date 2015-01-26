@@ -32,7 +32,7 @@ This is what I plan to implement in upcoming versions.
 
 1. Hooks to apply enhacements only on certain forms.
 1. Correct HTML5 fields for date, time, email, website, etc.
-1. Whatever I will find in nice in Forum -> Wishlist.
+1. Whatever I will find nice in [https://wordpress.org/support/topic/wishlist-10](https://wordpress.org/support/topic/wishlist-10 "Forum -> Wishlist.")
 
 == Installation ==
 
