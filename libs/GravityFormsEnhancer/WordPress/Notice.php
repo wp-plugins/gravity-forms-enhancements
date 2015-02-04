@@ -10,7 +10,11 @@
 
 namespace GravityFormsEnhancer\WordPress;
 
-
+/**
+ * Class Notice
+ * @package GravityFormsEnhancer\WordPress
+ * @author Martin Picha (http://latorante.name)
+ */
 class Notice
 {
     /** @var string */

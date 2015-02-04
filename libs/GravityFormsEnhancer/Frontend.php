@@ -13,7 +13,11 @@ namespace GravityFormsEnhancer;
 use GravityFormsEnhancer\RepositorySettings;
 use GravityFormsEnhancer\Enhancer;
 
-
+/**
+ * Class Frontend
+ * @package GravityFormsEnhancer
+ * @author Martin Picha (http://latorante.name)
+ */
 class Frontend
 {
     /** @var \GravityFormsEnhancer\EnhancerSettings  */

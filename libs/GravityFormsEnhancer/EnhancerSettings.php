@@ -12,21 +12,27 @@ namespace GravityFormsEnhancer;
 
 use GravityFormsEnhancer\Utils\Strings;
 
-
+/**
+ * Class EnhancerSettings
+ * @package GravityFormsEnhancer
+ * @author Martin Picha (http://latorante.name)
+ */
 class EnhancerSettings extends RepositorySettings
 {
     /** @var bool  */
-    var $enhancer = false;
+    var $enhancer = FALSE;
     /** @var bool */
-    var $checkMoveLabels = false;
+    var $checkMoveLabels = FALSE;
     /** @var bool */
-    var $checkRemoveFirstLabel = false;
+    var $checkRemoveFirstLabel = FALSE;
     /** @var bool */
-    var $checkRemoveAllLabels = false;
+    var $checkRemoveAllLabels = FALSE;
     /** @var bool */
-    var $checkAddPlaceholdersHTML5 = false;
+    var $checkAddPlaceholdersHTML5 = FALSE;
     /** @var bool */
-    var $checkAddPlaceholdersJavascript = false;
+    var $checkAddPlaceholdersJavascript = FALSE;
+    /** @var bool|string */
+    var $checkRetypeInputs = FALSE;
 
 
     /**
@@ -41,6 +47,8 @@ class EnhancerSettings extends RepositorySettings
         $this->checkRemoveAllLabels = $this->getOption('remove-all-labels', 'gravityFormsEnhancerLabels');
         $this->checkAddPlaceholdersHTML5 = $this->getOption('add-html5-placeholders-to-fields', 'gravityFormsEnhancerPlaceholders');
         $this->checkAddPlaceholdersJavascript = $this->getOption('add-javascript-placeholders-to-fields', 'gravityFormsEnhancerPlaceholders');
+        $this->checkAddPlaceholdersSelects = $this->getOption('add-placeholders-to-select-dropdowns', 'gravityFormsEnhancerPlaceholders');
+        $this->checkRetypeInputs = $this->getOption('retype-html5-inputs-to-correct-types', 'gravityFormsEnhancerHTML');
         // Sanatize
         $this->sanatize();
     }

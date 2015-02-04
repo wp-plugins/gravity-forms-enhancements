@@ -13,6 +13,11 @@
 
 namespace GravityFormsEnhancer\Utils;
 
+/**
+ * Class Strings
+ * @package GravityFormsEnhancer\Utils
+ * @author Martin Picha (http://latorante.name)
+ */
 class Strings
 {
 

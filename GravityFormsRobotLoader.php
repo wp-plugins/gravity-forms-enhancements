@@ -21,6 +21,10 @@
  * @author Fabien Potencier <fabien.potencier@symfony-project.org>
  */
 
+/**
+ * Class GravityFormsEnhancerRobotLoader
+ * @author Martin Picha (http://latorante.name)
+ */
 class GravityFormsEnhancerRobotLoader
 {
     /** @var string */
@@ -38,7 +42,7 @@ class GravityFormsEnhancerRobotLoader
      *
      * @param string $ns The namespace to use.
      */
-    public function __construct($ns = null, $includePath = null)
+    public function __construct($ns = NULL, $includePath = NULL)
     {
         $this->_namespace = $ns;
         $this->_includePath = $includePath;
@@ -113,16 +117,16 @@ class GravityFormsEnhancerRobotLoader
      */
     public function loadClass($className)
     {
-        if (null === $this->_namespace || $this->_namespace.$this->_namespaceSeparator === substr($className, 0, strlen($this->_namespace.$this->_namespaceSeparator))){
+        if (NULL === $this->_namespace || $this->_namespace.$this->_namespaceSeparator === substr($className, 0, strlen($this->_namespace.$this->_namespaceSeparator))){
             $fileName = '';
             $namespace = '';
-            if (false !== ($lastNsPos = strripos($className, $this->_namespaceSeparator))) {
+            if (FALSE !== ($lastNsPos = strripos($className, $this->_namespaceSeparator))) {
                 $namespace = substr($className, 0, $lastNsPos);
                 $className = substr($className, $lastNsPos + 1);
                 $fileName = str_replace($this->_namespaceSeparator, DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
             }
             $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . $this->_fileExtension;
-            require ($this->_includePath !== null ? $this->_includePath . DIRECTORY_SEPARATOR : '') . $fileName;
+            require ($this->_includePath !== NULL ? $this->_includePath . DIRECTORY_SEPARATOR : '') . $fileName;
         }
     }
 }

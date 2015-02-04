@@ -10,7 +10,11 @@
 
 namespace GravityFormsEnhancer\WordPress;
 
-
+/**
+ * Class Utils
+ * @package GravityFormsEnhancer\WordPress
+ * @author Martin Picha (http://latorante.name)
+ */
 class Utils
 {
     /**
@@ -21,7 +25,7 @@ class Utils
      * @param $value
      * @return mixed
      */
-    public static function addQueryParam($url, $key, $value = null){ return add_query_arg($key, $value, $url); }
+    public static function addQueryParam($url, $key, $value = NULL){ return add_query_arg($key, $value, $url); }
 
 
     /**

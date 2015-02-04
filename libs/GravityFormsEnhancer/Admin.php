@@ -17,7 +17,11 @@ use GravityFormsEnhancer\RepositorySettings;
 use GravityFormsEnhancer\Page\PageSettings;
 use GravityFormsEnhancer\Utils\Strings;
 
-
+/**
+ * Class Admin
+ * @package GravityFormsEnhancer
+ * @author Martin Picha (http://latorante.name)
+ */
 class Admin
 {
     /** @var array Admin Messages */
@@ -51,7 +55,7 @@ class Admin
      */
     public function adminEnqueueScripts()
     {
-        wp_register_style('gravityFormsEnhancerAdmin', GFENHANCER_ASSETS . 'GravityFormsEnhancerAdmin.css', false, md5(GFENHANCER_VER));
+        wp_register_style('gravityFormsEnhancerAdmin', GFENHANCER_ASSETS . 'GravityFormsEnhancerAdmin.css', FALSE, md5(GFENHANCER_VER));
         wp_enqueue_style('gravityFormsEnhancerAdmin');
     }
 
@@ -125,7 +129,7 @@ class Admin
     public function pluginMeta($links, $file)
     {
         if ($file == GFENHANCER_FILE){
-            $ratePlugin = '<a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/gravity-forms-enhancer/">Rate this plugin</a>';
+            $ratePlugin = '<a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/gravity-forms-enhancements/">Rate this plugin</a>';
             $donatePlugin = '<a target="_blank" href="http://donate.latorante.name/">Donate</a>';
             array_push($links, $ratePlugin, $donatePlugin);
         }

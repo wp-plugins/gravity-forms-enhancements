@@ -1,11 +1,12 @@
 === Gravity Forms Enhancements ===
 Contributors: latorante
+Donate link: http://donate.latorante.name/
 Tags: gravity forms, html5 placeholders, gravity forms placeholders, gravity forms labels
 Requires at least: 3.3
 Tested up to: 4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Stable tag: 1.0
+Stable tag: 1.2
 
 Simple library to enhance the Gravity Forms experience, build on a necessity and desire not to amend Gravity Forms core files.
 
@@ -28,11 +29,9 @@ Would like to see something else? Don't hesitate to ask in the forum.
 
 = Road-map =
 
-This is what I plan to implement in upcoming versions.
+This is what I plan to implement in upcoming versions:
 
-1. Hooks to apply enhacements only on certain forms.
-1. Correct HTML5 fields for date, time, email, website, etc.
-1. Whatever I will find nice in [https://wordpress.org/support/topic/wishlist-10](https://wordpress.org/support/topic/wishlist-10 "Forum -> Wishlist.")
+1. Whatever I will find nice in [Forum / Wishlist.](https://wordpress.org/support/topic/wishlist-10 "Forum / Wishlist.")
 
 == Installation ==
 
@@ -56,11 +55,18 @@ This is what I plan to implement in upcoming versions.
 
 == Frequently Asked Questions ==
 
-1. **I want a special functionality** - Forum -> Wishlist
+1. **I want a special functionality** - [Forum / Wishlist.](https://wordpress.org/support/topic/wishlist-10 "Forum / Wishlist.")
 
 == Upgrade Notice ==
-
+= 1.2 =
+New options, new fixes, new looks.
 == Changelog ==
+
+= 1.2 =
+* Added select dropdowns placeholder
+* Fixed tiny bug with missing value for JS placeholders
+* Added HTML5 retype functionality
+* Enabled filters to run enhacements only on specific forms
 
 = 1.0 =
 * Plugin added to repository.

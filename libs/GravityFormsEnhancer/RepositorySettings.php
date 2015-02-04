@@ -12,7 +12,11 @@ namespace GravityFormsEnhancer;
 
 use GravityFormsEnhancer\Utils\Strings;
 
-
+/**
+ * Class RepositorySettings
+ * @package GravityFormsEnhancer
+ * @author Martin Picha (http://latorante.name)
+ */
 abstract class RepositorySettings
 {
     /** general - used only by plugin calls */
@@ -104,7 +108,7 @@ abstract class RepositorySettings
         if(isset($general['notices'])){
             return $general['notices'];
         }
-        return null;
+        return NULL;
     }
 
 
@@ -115,8 +119,8 @@ abstract class RepositorySettings
      */
     public function flushSavedNotices()
     {
-        $this->injectSingle('notices', null, self::KEY_GENERAL);
-        return true;
+        $this->injectSingle('notices', NULL, self::KEY_GENERAL);
+        return TRUE;
     }
 
     /**

@@ -13,7 +13,6 @@ if (!defined('ABSPATH') && !defined('WP_UNINSTALL_PLUGIN')){ exit(); }
 /**
  * Uninstall function
  */
-
 function GravityFormsEnhancerUninstall()
 {
     // Delete db option
@@ -35,4 +34,3 @@ if (function_exists('is_multisite') && is_multisite()){
 } else {
     GravityFormsEnhancerUninstall();
 }
-

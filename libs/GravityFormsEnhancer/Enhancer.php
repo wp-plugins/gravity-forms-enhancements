@@ -13,19 +13,35 @@ namespace GravityFormsEnhancer;
 use GravityFormsEnhancer\WordPress\Filter;
 use GravityFormsEnhancer\EnhancerSettings;
 
-
 /**
  * Class Enhancer
- *
+ * @package GravityFormsEnhancer
  * @author Martin Picha (http://latorante.name)
  */
 class Enhancer
 {
     /** @var null | array | int */
-    public static $form = null;
+    var $form = NULL;
     /** @var int  */
-    public static $priority = 10;
-
+    var $priority = 10;
+    /** @var array */
+    var $fieldLabelFirstRemoved = array();
+    /** @var array */
+    var $fieldHTML5Types = array(
+        'color',
+        'date' => 'date',
+        'datetime',
+        'datetime-local',
+        'email' => 'email',
+        'month',
+        'number',
+        'range',
+        'search',
+        'phone' => 'tel',
+        'time',
+        'website' => 'url',
+        'week',
+    );
 
     /**
      * Register Gravity Forms handler, with Settings object,
@@ -43,27 +59,27 @@ class Enhancer
             // Add gravity forms HTML content filter
             Filter::add('gform_field_content', function($content, $field, $value, $lead_id, $form_id) use ($repositorySettings){
                 // Apply form
-                self::$form = apply_filters('gravity_forms_enhancer_form', self::$form);
+                $this->form = apply_filters('gravity_forms_enhancer_form', $this->form);
                 // Not for admin
                 if(!is_admin()){
-                    if(is_numeric(self::$form)){
-                        if(self::$form == $form_id){
-                            // Put placeholders for specific form
+                    if(is_numeric($this->form)){
+                        if($this->form == $form_id){
+                            // Hunt for specific form
                             $content = $this->hunt($content, $field, $repositorySettings);
                         }
-                    } elseif(is_array(self::$form)){
-                        if(in_array($form_id, self::$form)){
-                            // Put placeholders for list of forms
+                    } elseif(is_array($this->form)){
+                        if(in_array($form_id, $this->form)){
+                            // Hunt for list of forms
                             $content = $this->hunt($content, $field, $repositorySettings);
                         }
                     } else {
-                        // Put placeholders for all forms
+                        // Hunt for all forms
                         $content = $this->hunt($content, $field, $repositorySettings);
                     }
                 }
                 // Always return content
                 return $content;
-            }, self::$priority, 5);
+            }, $this->priority, 5);
         }
     }
 
@@ -72,8 +88,6 @@ class Enhancer
      * Hunter that finds labels and moves
      * them around.
      *
-     * TODO: add functionality for correct email, number html5 fields etc.
-     *
      * @param $content
      * @param $field
      * @param EnhancerSettings $repositorySettings
@@ -81,24 +95,33 @@ class Enhancer
      */
     private function hunt($content, $field, \GravityFormsEnhancer\EnhancerSettings $repositorySettings)
     {
+        // Field basic
+        $fieldId = $field['id'];
+        $fieldHasLabel = (isset($field['label']) && !empty($field['label'])) ? TRUE : FALSE;
+        $fieldHasChoices = (isset($field['choices']) && !empty($field['choices'])) ? count($field['choices']) : FALSE;
+        $fieldHasInputs = (isset($field['inputs']) && !empty($field['inputs'])) ? count($field['inputs']) : FALSE;
+        $fieldType = (isset($field['type']) && !empty($field['type'])) ? $field['type'] : NULL;
         $fieldComplexed = FALSE;
+        $fieldCanRetype = (isset($this->fieldHTML5Types[$fieldType])) ? TRUE : FALSE;
         // Complexed field?
-        if(isset($field['inputs']) && !empty($field['inputs'])){
+        if(isset($field['inputs'])
+            && !empty($field['inputs'])
+            && ($fieldType !== 'checkbox' && $fieldType !== 'radio')){  // For some reason checkbox / radios would have been counted as complexed as well.
             // Yup it is now.
-            $fieldComplexed = true;
+            $fieldComplexed = TRUE;
         }
         // Set errors off
-        libxml_use_internal_errors(true);
+        libxml_use_internal_errors(TRUE);
         // DomDocument
         $dom = new \DOMDocument;
         $dom->loadHTML($content);
-        $dom->preserveWhiteSpace = false;
+        $dom->preserveWhiteSpace = FALSE;
         // Loaded HTML
         $labels = $dom->getElementsByTagName("label");
         $labelMoveTo = array();
         $labelFirst = $dom->getElementsByTagName("label")->item(0);
         // Remove first label for complexed fields?
-        if($repositorySettings->checkRemoveFirstLabel == TRUE && !empty($labelFirst) && $fieldComplexed == TRUE){
+        if($repositorySettings->checkRemoveFirstLabel === TRUE && !empty($labelFirst) && $fieldComplexed === TRUE){
             $labelFirst->parentNode->removeChild($labelFirst);
         }
         // Now, let's do some magic
@@ -116,48 +139,105 @@ class Enhancer
                 // Can have placehodler?
                 $fieldCanHavePlaceholder = FALSE;
                 $fieldCanHavePlaceholderJavascript = FALSE;
+                $fieldCanHavePlaceholderSelect = FALSE;
+                $fieldCanDeletePlaceholder = TRUE;
                 // Get input by given ID
                 $input = $dom->getElementById($inputId);
                 // If we have an input, insert label before, if it's not a checkbox | radio | submit
-                if($input
-                    && (($input->tagName == 'textarea')
+                if($input){
+                    // Basics
+                    if($input->tagName == 'textarea'
                         || ($input->tagName == 'input'
                             && $input->getAttribute('type') !== 'checkbox'
                             && $input->getAttribute('type') !== 'radio'
-                            && $input->getAttribute('type') !== 'submit'
-                        )
-                    )){
-                    // This type of field can have placeholder
-                    $fieldCanHavePlaceholder = TRUE;
-                    // And can have Javascript placeholder
-                    $fieldCanHavePlaceholderJavascript = TRUE;
-                    if($input->tagName == 'textarea'){
-                        // If it's not textarea of course
-                        $fieldCanHavePlaceholderJavascript = FALSE;
+                            && $input->getAttribute('type') !== 'submit')
+                    ){
+                        // This type of field can have placeholder
+                        $fieldCanHavePlaceholder = TRUE;
+                        // And can have Javascript placeholder
+                        $fieldCanHavePlaceholderJavascript = TRUE;
+                        if($input->tagName == 'textarea'){
+                            // If it's not textarea of course
+                            $fieldCanHavePlaceholderJavascript = FALSE;
+                        }
+                    }// Radios, and checkboxes should have labels
+                    if($input->tagName == 'input' && ($input->getAttribute('type') == 'radio' || $input->getAttribute('type') == 'checkbox')){
+                        $fieldCanDeletePlaceholder = FALSE;
+                    }
+                    // Selects can have placeholders too! (sort of)
+                    if($input->tagName == 'select'){
+                        $fieldCanHavePlaceholderSelect = TRUE;
                     }
                 }
                 // Magic begins right here
                 // Add HTML5 Placeholders
-                if($input && $fieldCanHavePlaceholder && $repositorySettings->checkAddPlaceholdersHTML5 == TRUE){
+                if($input && $fieldCanHavePlaceholder && $repositorySettings->checkAddPlaceholdersHTML5 === TRUE){
                     $input->setAttribute('placeholder', $label->nodeValue);
                 }
                 // Add Javascript Placehodlers
-                if($input && $fieldCanHavePlaceholder && $fieldCanHavePlaceholderJavascript && $repositorySettings->checkAddPlaceholdersJavascript == TRUE){
+                if($input && $fieldCanHavePlaceholder && $fieldCanHavePlaceholderJavascript && $repositorySettings->checkAddPlaceholdersJavascript === TRUE){
                     $input->setAttribute('onfocus', 'if (this.value=="'. $label->nodeValue .'"){this.value="";}');
                     $input->setAttribute('onblur', 'if (this.value=="") {this.value="'. $label->nodeValue .'";}');
+                    // Can we for sure?
+                    if($input->hasAttribute('value')){
+                        // Add value placeholder
+                        $input->removeAttribute('value');
+                        $input->setAttribute('value', $label->nodeValue);
+                    }
+                }
+                // Add "placeholders" to select.
+                if($input && $fieldCanHavePlaceholderSelect && $repositorySettings->checkAddPlaceholdersSelects){
+                    // This is sort of annyoing, but the address field usually has
+                    // empty first field select, argh, we'll remove it if it's there
+                    if($fieldType == 'address'){
+                        if(
+                            $input->firstChild->nodeValue == ''
+                            && $input->firstChild->getAttribute('value') == ''
+                            && $input->firstChild->getAttribute('selected') == TRUE
+                        ){
+                            // Ok, we have a winner, remove him! Empty bastard
+                            $input->removeChild($input->firstChild);
+                        }
+                    }
+                    if($input->firstChild){
+                        // Insert before first <option>
+                        $input->insertBefore(new \DOMElement('option', $label->nodeValue), $input->firstChild);
+                    }
                 }
                 // Move complex fields label before input? Only if we don't delete them later of course.
-                if($input && $fieldComplexed == TRUE && $repositorySettings->checkMoveLabels == TRUE && $repositorySettings->checkRemoveAllLabels == FALSE){
+                if($input && $fieldComplexed === TRUE && $repositorySettings->checkMoveLabels === TRUE && $repositorySettings->checkRemoveAllLabels === FALSE){
                     $input->parentNode->insertBefore($label, $input);
                 }
                 // Remove All Labels?
-                if($input && $repositorySettings->checkRemoveAllLabels == TRUE){
+                if($input && $repositorySettings->checkRemoveAllLabels === TRUE){
+                    // Get all labels
                     $labels = $dom->getElementsByTagName("label");
+                    $labelsCurrentCount = count($labels);
+                    $labelFirst2ndRound = $dom->getElementsByTagName("label")->item(0);
                     // Dangerous game padawan!
                     if($labels){
-                        foreach($labels as $removeLabel){
-                            $removeLabel->parentNode->removeChild($removeLabel);
+                        // Checkboxes and radios should have their labels, but the overall
+                        // box label can go.
+                        if($fieldCanDeletePlaceholder === TRUE){
+                            foreach($labels as $labelKey => $removeLabel){
+                                // Remove label
+                                $removeLabel->parentNode->removeChild($removeLabel);
+                            }
+                        } elseif(!in_array($fieldId, $this->fieldLabelFirstRemoved)){
+                            // Let's remove the first label, and save this field ID to the array,
+                            // so the next irration we know, not to delete another label.
+                            $labelFirst2ndRound->parentNode->removeChild($labelFirst2ndRound);
+                            $this->fieldLabelFirstRemoved[] = $fieldId;
                         }
+                    }
+                }
+                // Can we retype this field?
+                if($input && $repositorySettings->checkRetypeInputs === TRUE && $fieldCanRetype === TRUE){
+                    // Can we for sure?
+                    if($input->hasAttribute('type')){
+                        // Retype
+                        $input->removeAttribute('type');
+                        $input->setAttribute('type', $this->fieldHTML5Types[$fieldType]);
                     }
                 }
             }

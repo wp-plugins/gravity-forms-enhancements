@@ -13,11 +13,15 @@ namespace GravityFormsEnhancer\WordPress;
 use GravityFormsEnhancer\Utils\Strings;
 use GravityFormsEnhancer\WordPress\Notice;
 
-
+/**
+ * Class Settings
+ * @package GravityFormsEnhancer\WordPress
+ * @author Martin Picha (http://latorante.name)
+ */
 abstract class Settings
 {
-    /** if true, displays erros as notices, if false, displays them underneath the field */
-    const DISPLAY_NOTICE = false;
+    /** if TRUE, displays erros as notices, if FALSE, displays them underneath the field */
+    const DISPLAY_NOTICE = FALSE;
     /** @var array */
     private $sections = array();
     /** @var array */
@@ -27,7 +31,7 @@ abstract class Settings
     /** @var string */
     public $class = 'enhanced';
     /** @var bool */
-    public $tabbed = true;
+    public $tabbed = TRUE;
 
 
     /**
@@ -126,13 +130,14 @@ abstract class Settings
      * @param $label
      * @param null $name
      */
-    public function addHtml($section, $label, $name = null)
+    public function addHtml($section, $label, $desc = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'type' => 'html',
-                'label' => $label
+                'label' => $label,
+                'desc' => $desc
             )
         );
     }
@@ -147,11 +152,11 @@ abstract class Settings
      * @param string $desc
      * @param null $name
      */
-    public function addText($section, $label, $defautlt = '', $desc = '', $name = null)
+    public function addText($section, $label, $defautlt = '', $desc = '', $name = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'label' => $label,
                 'type' => 'text',
                 'default' => $defautlt,
@@ -170,11 +175,11 @@ abstract class Settings
      * @param string $desc
      * @param null $name
      */
-    public function addTextarea($section, $label, $defautlt = '', $desc = '', $name = null)
+    public function addTextarea($section, $label, $defautlt = '', $desc = '', $name = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'label' => $label,
                 'type' => 'textarea',
                 'default' => $defautlt,
@@ -193,11 +198,11 @@ abstract class Settings
      * @param string $desc
      * @param null $name
      */
-    public function addSelect($section, $label, $options = array(), $desc = '', $name = null)
+    public function addSelect($section, $label, $options = array(), $desc = '', $name = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'label' => $label,
                 'type' => 'select',
                 'options' => $options,
@@ -217,11 +222,11 @@ abstract class Settings
      * @param string $desc
      * @param null $name
      */
-    public function addMulticheck($section, $label, $options = array(), $default = null, $desc = '', $name = null)
+    public function addMulticheck($section, $label, $options = array(), $default = NULL, $desc = '', $name = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'label' => $label,
                 'type' => 'multicheck',
                 'options' => $options,
@@ -241,11 +246,11 @@ abstract class Settings
      * @param string $desc
      * @param null $name
      */
-    public function addCheckbox($section, $label, $default = null, $desc = '', $name = null)
+    public function addCheckbox($section, $label, $default = NULL, $desc = '', $name = NULL)
     {
         $this->addField($section,
             array(
-                'name' => $name == null ? Strings::webalize($label) : $name,
+                'name' => $name == NULL ? Strings::webalize($label) : $name,
                 'label' => $label,
                 'type' => 'checkbox',
                 'default' => $default,
@@ -260,7 +265,7 @@ abstract class Settings
      *
      * @param bool $yes
      */
-    public function tabbed($yes = true){ $this->tabbed = $yes; }
+    public function tabbed($yes = TRUE){ $this->tabbed = $yes; }
 
 
     /**
@@ -274,7 +279,7 @@ abstract class Settings
     {
         //register settings sections
         foreach ($this->sections as $section){
-            if (false == get_option($section['id'])){ add_option($section['id']); }
+            if (FALSE == get_option($section['id'])){ add_option($section['id']); }
             if (isset($section['desc']) && !empty($section['desc'])){
                 $section['desc'] = '<div class="inside">'.$section['desc'].'</div>';
                 $callback = create_function('', 'echo "'.str_replace('"', '\"', $section['desc']).'";');
@@ -291,7 +296,7 @@ abstract class Settings
                     $args = array(
                         'type' => $type,
                         'id' => $option['name'],
-                        'desc' => isset($option['desc']) ? $option['desc'] : null,
+                        'desc' => isset($option['desc']) ? $option['desc'] : NULL,
                         'name' => $option['label'],
                         'section' => $section,
                         'options' => isset($option['options']) ? $option['options'] : '',
@@ -329,7 +334,7 @@ abstract class Settings
         $fieldValue = esc_attr($this->repositarySettings->getOption($args['id'], $args['section'], $args['std']));
         $fieldValueUn = $this->repositarySettings->getOption($args['id'], $args['section'], $args['std']);
         $fieldClass = $this->hasError($args['id']) ? ' genooError' : '';
-        $fieldError = $this->hasError($args['id']) ? $this->getError($args['id']) : false;
+        $fieldError = $this->hasError($args['id']) ? $this->getError($args['id']) : FALSE;
         $fieldErrorHtml = $fieldError ? '<br /><div class="clear"></div><span class="genooDescriptionError">' . $fieldError . '</span>' : '';
         $fieldDesc = $args['desc'] ? sprintf('<br /><div class="clear"></div><span class="description"> %s</span>', $args['desc']) : null;
         $fieldAttr = '';
@@ -347,19 +352,18 @@ abstract class Settings
                 break;
             case 'checkbox':
                 $fieldHtml .= sprintf('<input type="hidden" name="%1$s[%2$s]" value="off" />', $args['section'], $args['id']);
-                $fieldHtml .= sprintf('<input type="checkbox" class="checkbox" id="%1$s-%2$s" name="%1$s[%2$s]" value="on"%4$s %5$s />', $args['section'], $args['id'], $fieldValue, checked($fieldValue, 'on', false), $fieldAttr);
-                $fieldHtml .= sprintf('<label for="%1$s[%2$s]"> %3$s</label>', $args['section'], $args['id'], $args['desc']);
+                $fieldHtml .= sprintf('<input type="checkbox" class="checkbox" id="%1$s-%2$s" name="%1$s[%2$s]" value="on"%4$s %5$s />', $args['section'], $args['id'], $fieldValue, checked($fieldValue, 'on', FALSE), $fieldAttr);
                 break;
             case 'multicheck':
                 foreach ($args['options'] as $key => $label){
                     $checked = isset($fieldValueUn[$key]) ? $fieldValueUn[$key] : '0';
-                    $fieldHtml .= sprintf('<input type="checkbox" class="checkbox" id="%1$s-%2$s-%3$s" name="%1$s[%2$s][%3$s]" value="%3$s"%4$s />', $args['section'], $args['id'], $key, checked($checked, $key, false));
+                    $fieldHtml .= sprintf('<input type="checkbox" class="checkbox" id="%1$s-%2$s-%3$s" name="%1$s[%2$s][%3$s]" value="%3$s"%4$s />', $args['section'], $args['id'], $key, checked($checked, $key, FALSE));
                     $fieldHtml .= sprintf('<label for="%1$s[%2$s][%4$s]"> %3$s</label><br />', $args['section'], $args['id'], $label, $key);
                 }
                 break;
             case 'radio':
                 foreach ($args['options'] as $key => $label){
-                    $fieldHtml .= sprintf('<input type="radio" class="radio" id="%1$s-%2$s-%3$s" name="%1$s[%2$s]" value="%3$s"%4$s %5$s />', $args['section'], $args['id'], $key, checked($fieldValueUn, $key, false), $fieldAttr);
+                    $fieldHtml .= sprintf('<input type="radio" class="radio" id="%1$s-%2$s-%3$s" name="%1$s[%2$s]" value="%3$s"%4$s %5$s />', $args['section'], $args['id'], $key, checked($fieldValueUn, $key, FALSE), $fieldAttr);
                     $fieldHtml .= sprintf('<label for="%1$s[%2$s][%4$s]"> %3$s</label><br />', $args['section'], $args['id'], $label, $key);
                 }
                 $fieldDesc = sprintf( '<br /><div class="clear"></div><span class="description"> %s</label>', $args['desc']);
@@ -367,7 +371,7 @@ abstract class Settings
             case 'select':
                 $fieldHtml .= sprintf('<select class="regular %1$s" name="%2$s[%3$s]" id="%2$s-%3$s" %4$s>', $fieldClass, $args['section'], $args['id'], $fieldAttr);
                 foreach ($args['options'] as $key => $label){
-                    $fieldHtml .= sprintf( '<option value="%s"%s>%s</option>', $key, selected($fieldValue, $key, false), $label);
+                    $fieldHtml .= sprintf( '<option value="%s"%s>%s</option>', $key, selected($fieldValue, $key, FALSE), $label);
                 }
                 $fieldHtml .= sprintf('</select>');
                 break;
@@ -376,6 +380,7 @@ abstract class Settings
                 break;
             case 'html':
                 $fieldHtml .= sprintf('<div id="%1$s-%2$s">%3$s</div>', $args['section'], $args['id'], $args['desc']);
+                $fieldDesc = '';
                 break;
             case 'color':
                 $size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
@@ -413,7 +418,7 @@ abstract class Settings
             // wysiwyg is bit different
             case 'wysiwyg':
                 echo '<div style="width: 500px;">';
-                    wp_editor(wpautop($fieldValueUn), $args['section'] . '[' . $args['id'] . ']', array('teeny' => true, 'textarea_rows' => 10));
+                    wp_editor(wpautop($fieldValueUn), $args['section'] . '[' . $args['id'] . ']', array('teeny' => TRUE, 'textarea_rows' => 10));
                 echo '</div>';
                 echo $fieldHtml . (!self::DISPLAY_NOTICE ? $fieldErrorHtml : '') . $fieldDesc;
                 break;
@@ -431,9 +436,9 @@ abstract class Settings
     private function hasTabs()
     {
         if(count($this->sections) > 1){
-            return true;
+            return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
 
@@ -464,7 +469,7 @@ abstract class Settings
      */
     public function render()
     {
-        $class = $this->class . ' ' .  ($this->tabbed == true ? ' tabbed' : 'not-tabbed');
+        $class = $this->class . ' ' .  ($this->tabbed == TRUE ? ' tabbed' : 'not-tabbed');
         echo '<div class="wrap '. $class .'"><h2>' . $this->title . '</h2>';
         // render before
         if($this->hasTabs() && $this->tabbed){
@@ -483,7 +488,7 @@ abstract class Settings
         }
 
         // Render content
-        if($this->tabbed == true){
+        if($this->tabbed == TRUE){
             echo '<div class="metabox-holder">';
             echo '<div class="postbox">';
         }
@@ -491,7 +496,7 @@ abstract class Settings
         // Go thru sections
         foreach($this->sections as $form){
 
-            if($this->tabbed == false){
+            if($this->tabbed == FALSE){
                 echo '<div class="metabox-holder">';
                 echo '<div class="postbox">';
             }
@@ -513,12 +518,12 @@ abstract class Settings
             echo '</form>';
             echo '</div>';
 
-            if($this->tabbed == false){
+            if($this->tabbed == FALSE){
                 echo '</div>';
                 echo '</div>';
             }
         }
-        if($this->tabbed == true){
+        if($this->tabbed == TRUE){
             echo '</div>';
             echo '</div>';
         }
@@ -568,10 +573,10 @@ abstract class Settings
     {
         foreach(get_settings_errors() as $err){
             if($key == $err['setting']){
-                return true;
+                return TRUE;
             }
         }
-        return false;
+        return FALSE;
     }
 
 
@@ -588,7 +593,7 @@ abstract class Settings
                 return $err['message'];
             }
         }
-        return false;
+        return FALSE;
     }
 
 

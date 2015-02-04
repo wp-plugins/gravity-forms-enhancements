@@ -12,6 +12,11 @@ namespace GravityFormsEnhancer\WordPress;
 
 use GravityFormsEnhancer\Utils\Strings;
 
+/**
+ * Class Filter
+ * @package GravityFormsEnhancer\WordPress
+ * @author Martin Picha (http://latorante.name)
+ */
 class Filter
 {
     /**
@@ -22,7 +27,7 @@ class Filter
      * @param int $p
      * @param null $args
      */
-    public static function add($tag, $f, $p = 10, $args = null)
+    public static function add($tag, $f, $p = 10, $args = NULL)
     {
         add_filter($tag, $f, $p, $args);
     }

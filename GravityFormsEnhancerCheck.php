@@ -8,7 +8,10 @@
  * the GravityFormsEnhacner.php file in root directory of this plugin.
  */
 
-
+/**
+ * Class GravityFormsEnhancerCheck
+ * @author Martin Picha (http://latorante.name)
+ */
 class GravityFormsEnhancerCheck
 {
     /**
