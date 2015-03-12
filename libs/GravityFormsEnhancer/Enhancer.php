@@ -21,7 +21,7 @@ use GravityFormsEnhancer\EnhancerSettings;
 class Enhancer
 {
     /** @var null | array | int */
-    var $form = NULL;
+    public static $form = NULL;
     /** @var int  */
     var $priority = 10;
     /** @var array */
@@ -56,25 +56,27 @@ class Enhancer
         // meaning if original behaviour is being modified
         // in settings.
         if($repositorySettings->enhancer == TRUE){
+            // PHP lower than 5.4 support (meh)
+            $that = $this;
             // Add gravity forms HTML content filter
-            Filter::add('gform_field_content', function($content, $field, $value, $lead_id, $form_id) use ($repositorySettings){
+            Filter::add('gform_field_content', function($content, $field, $value, $lead_id, $form_id) use ($repositorySettings, $that){
                 // Apply form
-                $this->form = apply_filters('gravity_forms_enhancer_form', $this->form);
+                self::$form = apply_filters('gravity_forms_enhancer_form', self::$form);
                 // Not for admin
                 if(!is_admin()){
-                    if(is_numeric($this->form)){
-                        if($this->form == $form_id){
+                    if(is_numeric(self::$form)){
+                        if(self::$form == $form_id){
                             // Hunt for specific form
-                            $content = $this->hunt($content, $field, $repositorySettings);
+                            $content = $that->hunt($content, $field, $repositorySettings);
                         }
-                    } elseif(is_array($this->form)){
-                        if(in_array($form_id, $this->form)){
+                    } elseif(is_array(self::$form)){
+                        if(in_array($form_id, self::$form)){
                             // Hunt for list of forms
-                            $content = $this->hunt($content, $field, $repositorySettings);
+                            $content = $that->hunt($content, $field, $repositorySettings);
                         }
                     } else {
                         // Hunt for all forms
-                        $content = $this->hunt($content, $field, $repositorySettings);
+                        $content = $that->hunt($content, $field, $repositorySettings);
                     }
                 }
                 // Always return content

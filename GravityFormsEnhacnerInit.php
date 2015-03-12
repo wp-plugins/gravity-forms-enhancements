@@ -34,7 +34,7 @@ class GravityFormsEnhancerInit
         define('GFENHANCER_FOLDER',  plugins_url(NULL, __FILE__));
         define('GFENHANCER_ASSETS',  GFENHANCER_FOLDER . '/assets/');
         define('GFENHANCER_ROOT',    dirname(__FILE__) . DIRECTORY_SEPARATOR);
-        define('GFENHANCER_VER',     '1.2');
+        define('GFENHANCER_VER',     '1.3');
         // Start the engine last file to require, rest is auto
         // Custom auto loader, PSR-0 Standard
         require_once('GravityFormsRobotLoader.php');
