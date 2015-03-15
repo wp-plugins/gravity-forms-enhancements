@@ -134,7 +134,7 @@ abstract class Settings
     {
         $this->addField($section,
             array(
-                'name' => $name == NULL ? Strings::webalize($label) : $name,
+                'name' => Strings::webalize($label),
                 'type' => 'html',
                 'label' => $label,
                 'desc' => $desc
